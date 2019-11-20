@@ -367,6 +367,7 @@ all: lib/libmxnet.a lib/libmxnet.so $(BIN) extra-packages
 SRC = $(wildcard src/*/*/*/*.cc src/*/*/*.cc src/*/*.cc src/*.cc)
 OBJ = $(patsubst %.cc, build/%.o, $(SRC))
 CUSRC = $(wildcard src/*/*/*/*.cu src/*/*/*.cu src/*/*.cu src/*.cu)
+CUHEADERS = $(wildcard src/*/*/*/*.cuh src/*/*/*.cuh src/*/*.cuh src/*.cuh) 
 CUOBJ = $(patsubst %.cu, build/%_gpu.o, $(CUSRC))
 
 # extra operators
@@ -466,6 +467,11 @@ build/plugin/%_gpu.o: plugin/%.cu
 build/plugin/%.o: plugin/%.cc
 	@mkdir -p $(@D)
 	$(CXX) -std=c++11 -c $(CFLAGS) -MMD -c $< -o $@
+
+build/src/operator/custom/new_gpu.o: src/operator/custom/new.cu src/operator/custom/new-forward.cuh 
+	@mkdir -p $(@D)
+	$(NVCC) $(NVCCFLAGS) $(CUDA_ARCH) -Xcompiler "$(CFLAGS) -Isrc/operator" -M -MT $*.o $< >$*.d
+	$(NVCC) -c -o $@ $(NVCCFLAGS) $(CUDA_ARCH) -Xcompiler "$(CFLAGS) -Isrc/operator" $<
 
 %_gpu.o: %.cu
 	@mkdir -p $(@D)

@@ -60,7 +60,7 @@ USE_SIGNAL_HANDLER =
 ADD_LDFLAGS =
 
 # the additional compile flags you want to add
-ADD_CFLAGS =
+ADD_CFLAGS = -I/usr/include/openblas -I/usr/local/cuda-8.0/include
 
 #---------------------------------------------
 # matrix computation libraries for CPU/GPU
