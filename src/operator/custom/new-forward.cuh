@@ -3,6 +3,14 @@
 
 #include <mxnet/base.h>
 
+#ifndef __CUDACC__
+#define __CUDACC__
+#endif
+
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <cuda_runtime_api.h>
+
 namespace mxnet {
 namespace op {
 
